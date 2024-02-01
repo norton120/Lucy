@@ -6,7 +6,7 @@
 _autonomous enabled workflow/perpetual agent for multi-tenant, multi-user applications_
 
 ### Why
-We have a collection of use cases that need this, but deciding on where to put the IP is tricky. So we release Sid as OSS and that solves that problem.
+We have a collection of use cases that need this. So Sid is the abstraction where we figure this out together.
 
 ### Minimum Viable Capabilities
 - **Perpetual chat with context recall**
