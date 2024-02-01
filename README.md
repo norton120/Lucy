@@ -1,7 +1,7 @@
 ## Sid 6.7
 
 ![SID 6.7](https://www.everythingaction.com/wp-content/uploads/2017/11/OL3u1QW-e1511130316163-560x272.png)
-> I'm a fifty-terabyte, self-evolving neural network, double back-flip off the high platform. I'm not a swan dive. And I have to tell you, killing for real - it was a real rush.
+> I'm a fifty-terabyte, self-evolving neural network, double back-flip off the high platform. I'm not a swan dive.
 
 _autonomous enabled workflow/perpetual agent for multi-tenant, multi-user applications_
 
