@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  sid:
+    image: "sid"
+    build:
+      context: .
+      dockerfile: "Dockerfile"
+    hostname: "sid"
+    volumes:
+      - "./src:/app"
+    env_file:
+      - ".env"
+    environment:
+      POSTGRES_USER: "sid"
+      POSTGRES_PASSWORD: "sid"
+      POSTGRES_DB: "sid"
+    depends_on:
+      - "sid_db"
+  sid_db:
+    image: "ankane/pgvector:v0.5.1"
+    hostname: "sid-db"
+    environment:
+      POSTGRES_USER: "sid"
+      POSTGRES_PASSWORD: "sid"
+      POSTGRES_DB: "sid"
+    volumes:
+      - ".data/postgres-data:/var/lib/postgresql/data"
