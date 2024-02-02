@@ -9,6 +9,8 @@ _autonomous enabled workflow/perpetual agent for multi-tenant, multi-user applic
 We have a collection of use cases that need this. So Sid is the abstraction where we figure this out together.
 
 ### Minimum Viable Capabilities
+- **OSS Models Only**
+  Must support VLLM/Ollama service. We can use Together.ai for testing initially with an eye on VLLM-OpenAI spec compatability
 - **Perpetual chat with context recall**
   if you tell a Sid agent that "I fucking love pickles" and later ask the agent or order me a sandwich, the bot should say "extra pickles, right?"
 - **Agency via Python functions**
@@ -19,3 +21,10 @@ We have a collection of use cases that need this. So Sid is the abstraction wher
   Agents can be given work to do and/or things to accomplish with the user, like getting status on a project or booking a flight.
 - **grown-ass scalability**
   can be deployed in a container, scaled horizontally, load balanced, replicated across zones etc.
+
+### Development
+since Sid is designed to drop into an application framework with orgs, venues, and users, you need frameworks to test it in.
+- [fastapi_test](fastapi_test)
+- `#TODO:` django_test
+
+each is a basic instance of that framework where we can run a suite of Sid tests in an agnostic way.
