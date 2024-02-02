@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sid67"
+version = "0.0.1-alpha.1"
+dependencies = [
+  "httpx",
+]
+requires-python = ">=3.11"
+authors = [
+  {name = "Ethan Knox", email = "ethan@knox.dev"},
+  {name = "Chris Woodson", email = "clwoodson@gmail.com"},
+]
+maintainers = [
+  {name = "Ethan Knox", email = "ethan@knox.dev"}
+]
+description = "Multi tenant, user, venue agent management system"
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["AI", "memgpt", "autogen", "agent", "LLM"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Programming Language :: Python"
+]
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["tests*"]
+namespaces = false
+
+
+[project.urls]
+Homepage = "https://github.com/norton120/sid"
+Documention = "https://github.com/norton120/sid"
+Repository = "https://github.com/norton120/sid.git"
+"Bug Tracker" = "https://github.com/norton120/sid/issues"
+Changelog = "https://github.com/norton120/sid/blob/master/CHANGELOG.md"
