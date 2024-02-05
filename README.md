@@ -28,3 +28,6 @@ since Sid is designed to drop into an application framework with orgs, venues, a
 - `#TODO:` django_test
 
 each is a basic instance of that framework where we can run a suite of Sid tests in an agnostic way.
+
+> [!IMPORTANT]
+> We really need a simple front-end to test this with. Considering a Mattermost installation? or just setting up a test Slack/Discord to start? Open to ideas.
