@@ -16,15 +16,14 @@ services:
       context: fastapi_test
       dockerfile: Dockerfile
     volumes:
-      - ../src:/sid
-      - ./app:/app
+      - ./src:/sid
+      - ./fastapi_test/app:/app/app
     env_file:
       - .env
     environment:
       POSTGRES_USER: sid
       POSTGRES_PASSWORD: sid
       POSTGRES_DB: sid_fastapi
-      PYTHONPATH: /app;/sid;${PYTHONPATH}
     depends_on:
       - sid_db
   # TODO: sid_django
@@ -37,6 +36,16 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - .data/postgres-data:/var/lib/postgresql/data
+  sid_langfuse:
+    image: ghcr.io/langfuse/langfuse:latest
+    hostname: sid-langfuse
+    environment:
+      - DATABASE_URL=postgresql://sid:sid@sid-db:5432/langfuse
+      - NEXTAUTH_URL=http://langfuse.localhost
+      - NEXTAUTH_SECRET=secret
+      - SALT=salt
+    depends_on:
+      - sid_db
 networks:
   default:
     name: sid
