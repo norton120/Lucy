@@ -1,2 +1,3 @@
-fastapi
-pymgpt
+
+pydantic
+pydantic_settings

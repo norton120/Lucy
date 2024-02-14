@@ -13,10 +13,11 @@ services:
     image: sid_fastapi
     hostname: sid-fastapi
     build:
-      context: fastapi_test
+      context: .
       dockerfile: Dockerfile
     volumes:
-      - ./src:/sid
+      - ./MemGPT:/packages/MemGPT
+      - ./src:/packages/sid
       - ./fastapi_test/app:/app/app
     env_file:
       - .env
