@@ -3,7 +3,7 @@ from memgpt.data_types import LLMConfig
 from sid.settings import settings
 
 together_ai_llm = LLMConfig(
-  model_endpoint_type="together_ai",
+  model_endpoint_type="togetherai",
   model="togethercomputer/falcon-7b-instruct",
   model_endpoint="https://api.together.xyz/v1",
 )
