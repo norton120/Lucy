@@ -17,7 +17,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./MemGPT:/packages/MemGPT
-      - ./src:/packages/sid
+      - ./Sid:/packages/Sid
       - ./fastapi_test/app:/app/app
     env_file:
       - .env
