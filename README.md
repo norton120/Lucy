@@ -5,6 +5,11 @@
 
 _autonomous enabled workflow/perpetual agent for multi-tenant, multi-user applications_
 
+> [!IMPORTANT]
+> Read all the README.md files in Sid/sid. This is becoming a full port of MemGPT to a production-able library that is backend-agnositc.
+> We want light, modular and decoupled agent rendering using the brilliant paged memory design from MemGPT, but in a commerically viable implementation.
+> Autogen may or may not be the multi-agent orchestrator of choice, we'll see when we get there.
+
 ### Why
 We have a collection of use cases that need this. So Sid is the abstraction where we figure this out together.
 
@@ -29,5 +34,4 @@ since Sid is designed to drop into an application framework with orgs, venues, a
 
 each is a basic instance of that framework where we can run a suite of Sid tests in an agnostic way.
 
-> [!IMPORTANT]
-> We really need a simple front-end to test this with. Considering a Mattermost installation? or just setting up a test Slack/Discord to start? Open to ideas.
+
