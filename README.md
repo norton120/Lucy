@@ -22,6 +22,7 @@ We have a collection of use cases that need this. So Sid is the abstraction wher
   a clean factory for providing agents with functions they can invoke and iterate with
 - **Multi: User, Tenant, Agent**
   reflect almost every SaaS application on Earth - orgs/teams/companies have many users. Agents can differentiate between different users, different teams, and the relationship between the two.
+  _note_: not multiplexing conversations. More than one human in the same conversation requires a completely different kind of model training that we haven't seen yet.
 - **Task Solving**
   Agents can be given work to do and/or things to accomplish with the user, like getting status on a project or booking a flight.
 - **grown-ass scalability**

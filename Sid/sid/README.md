@@ -32,6 +32,7 @@ And the Sid `settings.py` should look something like Djangos, like this:
 class Settings(EnvSettings):
 
     # Memory
+    state_backend: RedisBackend("redis0:6380,redis1:6380,allowAdmin=true")
     archive_backend: MongoBackend("mongodb://localhost:27017/archive")
     recall_backend: RedisBackend("redis0:6380,redis1:6380,allowAdmin=true")
 
