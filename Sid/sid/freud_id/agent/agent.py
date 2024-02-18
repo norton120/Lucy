@@ -4,9 +4,14 @@ class Agent:
     """
     def __init__(self,
                   ):
-        # for now memories will be configured globally
-        # LLMs will also be configured globally
-        #
+        # do we configure LLMs and Memory providers here?
+        # what about the memory state instance - what exactly is that?
+        # you've got:
+        # an identifier to map:
+            # each memory type to the correct agent instance
+            # the comms channel to message the user
+            # the comms channel to receiving messages from the user
+            # ... I think that's it?
 
     # assemble the core memory - system prompt plus (summarized) messages + available functions
 
@@ -25,4 +30,3 @@ class Agent:
         # resize the memory contents based on memory pressure
 
     # summarize messages in place
-
