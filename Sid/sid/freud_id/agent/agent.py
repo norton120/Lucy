@@ -1,9 +1,14 @@
+from sid.freud_id.agent.perpetuation import Perpetulation
+from sid.message_queues.cli_queue import CLIQueue
 
 class Agent:
     """The abstraction that uses different memory banks and an LLM to "think" and "act" in the environment
     """
     def __init__(self,
                   ):
+        self.perpetulation = Perpetulation(self)
+        self.message_queue = CLIQueue()
+
         # do we configure LLMs and Memory providers here?
         # what about the memory state instance - what exactly is that?
         # you've got:
@@ -30,3 +35,4 @@ class Agent:
         # resize the memory contents based on memory pressure
 
     # summarize messages in place
+
