@@ -121,3 +121,9 @@ class SqlalchemyBase(DBBase):
         _ = db_session.flush()
         if perist:
             _ = db_session.commit()
+
+    def read_or_create(self, db_session:"Session"):
+        try:
+            return self.read(self.id, db_session)
+        except InstanceNotFound:
+            return self.create(db_session)
