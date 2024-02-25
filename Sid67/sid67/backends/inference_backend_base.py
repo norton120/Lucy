@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from sid.schema import Turn
+from sid67.schema import Turn
 
 class SidInferenceBackendBase(ABC):
     """All Inference backends must implement this interface.
