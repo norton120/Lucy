@@ -1,17 +1,28 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+import logging
 from datetime import datetime
 from uuid import UUID, uuid4
-from sqlalchemy import Boolean, DateTime, func, text, UUID as SQLUUID
+from sqlalchemy import Boolean, DateTime, func, text, UUID as SQLUUID, select
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
     mapped_column,
     declarative_mixin,
-    declared_attr,
 )
 
+logger = logging.getLogger("sid.postgres")
+
+from sid_postgres_backend.exceptions import InstanceNotFound
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Session
+
+class DBBase(DeclarativeBase):
+    __abstract__ = True
+
+
 @declarative_mixin
-class SqlalchemyBase(DeclarativeBase):
+class SqlalchemyBase(DBBase):
     __abstract__ = True
 
     created_at: Mapped[Optional[datetime]] = mapped_column(
@@ -40,17 +51,17 @@ class SqlalchemyBase(DeclarativeBase):
         self._id = UUID(id_)
 
     @classmethod
-    async def list(cls, db_session: "AsyncSession") -> list["SqlalchemyBase"]:
+    def list(cls, db_session: "Session") -> list["SqlalchemyBase"]:
         """list all the objects in the database."""
         logger.info("listing %s", str(cls))
         query = select(cls).where(cls.is_deleted == False)
-        result = await db_session.execute(query)
+        result = db_session.execute(query)
         all_found = result.scalars().all()
         logger.info("found %s %s", len(all_found), str(cls))
         return all_found
 
-    async def create(
-        self, db_session: "AsyncSession", persist: Optional[bool] = True
+    def create(
+        self, db_session: "Session", persist: Optional[bool] = True
     ) -> "SqlalchemyBase":
         """Add this object to the database.
         Args:
@@ -63,15 +74,15 @@ class SqlalchemyBase(DeclarativeBase):
             if not self.last_updated_by_id:
                 self.last_updated_by_id = created_by.id
         db_session.add(self)
-        _ = await db_session.flush()
+        _ = db_session.flush()
         if persist:
-            _ = await db_session.commit()
-        _ = await db_session.refresh(self)
+            _ = db_session.commit()
+        _ = db_session.refresh(self)
         return self
 
     @classmethod
-    async def read(
-        cls, _id: str, db_session: "AsyncSession", show_deleted: bool = False
+    def read(
+        cls, _id: str, db_session: "Session", show_deleted: bool = False
     ) -> "SqlalchemyBase":
         """Read an object from the database.
         Args:
@@ -80,7 +91,7 @@ class SqlalchemyBase(DeclarativeBase):
         Returns: The object.
         Raises: InstanceNotFound if the object is not found.
         Example:
-            user = User.read("usr_1234", db_session)
+            user = SidAgentInstance.read("s_1234", db_session)
         """
         logger.info("reading %s %s", str(cls), _id)
         prefix, id_ = _id.split("_")
@@ -90,7 +101,7 @@ class SqlalchemyBase(DeclarativeBase):
         query = select(cls).where(cls._id == UUID(id_))
         if not show_deleted:
             query = query.where(cls.is_deleted == False)
-        result = await db_session.execute(query)
+        result = db_session.execute(query)
         found = result.unique().scalar_one_or_none()
         if not found:
             logger.error("no %s found for read lookup", cls.__name__)
@@ -98,29 +109,8 @@ class SqlalchemyBase(DeclarativeBase):
         logger.info("found %s for read lookup", found)
         return found
 
-    async def update(
-        self, db_session: "AsyncSession", persist: Optional[bool] = True
-    ) -> "SqlalchemyBase":
-        """Update this object in the database.
-        Args:
-            persist: should the update be committed? usefull for external transactions
-        Note: this logically could just be skipped with "persist" set to false, but
-        calling the verb makes for very readable code in many cases.
-        Returns: The object.
-        Example:
-            user = User.read("usr_1234", db_session)
-            user.username = "bar"
-            user.update(db_session)
-        """
-        logger.info("updating %s %s", str(self.__class__), self.id)
-        _ = await db_session.flush()
-        if persist:
-            _ = await db_session.commit()
-        _ = await db_session.refresh(self)
-        return self
-
-    async def delete(
-        self, db_session: "AsyncSession", perist: Optional[bool] = True
+    def delete(
+        self, db_session: "Session", perist: Optional[bool] = True
     ) -> None:
         """Soft deletes the object from the database.
         Args:
@@ -128,6 +118,12 @@ class SqlalchemyBase(DeclarativeBase):
         """
         logger.info("(soft) deleting %s %s", str(self.__class__), self.id)
         self.is_deleted = True
-        _ = await db_session.flush()
+        _ = db_session.flush()
         if perist:
-            _ = await db_session.commit()
+            _ = db_session.commit()
+
+    def read_or_create(self, db_session:"Session"):
+        try:
+            return self.read(self.id, db_session)
+        except InstanceNotFound:
+            return self.create(db_session)

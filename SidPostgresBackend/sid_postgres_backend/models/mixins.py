@@ -3,7 +3,7 @@ from uuid import UUID
 from sqlalchemy import UUID as SQLUUID, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-from sid_postgres_backend.models.base import SqlalchemyBase
+from sid_postgres_backend.models.base import DBBase
 
 class MalformedIdError(Exception):
     pass
@@ -35,7 +35,7 @@ def _relation_setter(instance: "SqlalchemyBase", prop: str, prefix: str, value: 
         raise MalformedIdError("Hash segment of {value} is not a valid UUID") from e
 
 
-class SidAgentInstanceMixin(SqlalchemyBase):
+class AgentInstanceMixin(DBBase):
     """Mixin for models that belong to an agent instance."""
 
     __abstract__ = True
