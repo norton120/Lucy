@@ -1,5 +1,5 @@
 from typing import List
-from sid.schema import ToolCall, Message, Tool
+from sid67.schema import ToolCall, Message, Tool
 
 
 class ToolEngine:

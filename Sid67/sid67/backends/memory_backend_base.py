@@ -1,7 +1,7 @@
 from typing import List, Union, Callable
 from abc import ABC, abstractmethod
 
-from sid.schema import MemoryType, SidMemoryCore, RecallSearchResult, ArchivalSearchResult, Message, Document
+from sid67.schema import MemoryType, SidMemoryCore, RecallSearchResult, ArchivalSearchResult, Message, Document
 
 class SidMemoryBackendBase(ABC):
     """All memory backends must implement this interface.

@@ -2,16 +2,16 @@ from typing import Optional, TYPE_CHECKING
 from datetime import datetime
 import logging
 
-from sid.settings import settings
-from sid.schema import SidMemoryCore, Role
-from sid.agent.prompt_engine import PromptEngine
-from sid.agent.tool_engine import ToolEngine
+from sid67.settings import settings
+from sid67.schema import SidMemoryCore, Role
+from sid67.agent.prompt_engine import PromptEngine
+from sid67.agent.tool_engine import ToolEngine
 
 if TYPE_CHECKING:
-    from sid.backends.inference_backend_base import SidInferenceBackendBase
-    from sid.backends.memory_backend_base import SidMemoryBackendBase
-    from sid.stimuli.stimuli_base import SidStimuliBase
-    from sid.schema import Message
+    from sid67.backends.inference_backend_base import SidInferenceBackendBase
+    from sid67.backends.memory_backend_base import SidMemoryBackendBase
+    from sid67.stimuli.stimuli_base import SidStimuliBase
+    from sid67.schema import Message
 
 # TODO: real library logging https://docs.python.org/3/howto/logging-cookbook.html#adding-handlers-other-than-nullhandler-to-a-logger-in-a-library
 logger = logging.getLogger("sid.agent")
