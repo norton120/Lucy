@@ -147,7 +147,3 @@ class Agent:
             role=Role.system,
             tools=self.tool_engine.os_tools
         )
-
-
-    # summarize messages in place
-

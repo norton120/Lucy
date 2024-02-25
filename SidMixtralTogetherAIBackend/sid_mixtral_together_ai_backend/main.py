@@ -3,7 +3,7 @@
 from openai import OpenAI as Together
 
 
-from sid_together_ai_backend.enums import LLMModel
+from sid_mixtral_together_ai_backend.enums import LLMModel
 
 class SidTogetherAIBackend:
     """LLM adapter for Together AI"""
@@ -21,3 +21,4 @@ class SidTogetherAIBackend:
             model = model.value
             )
 
+    def generate(self, )

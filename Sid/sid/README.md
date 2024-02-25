@@ -13,9 +13,12 @@ sid_project/
 |   |__app.py
 |   |__router.py # app code etc
 |
-|\__personas/
-|   |__salesperson/
-|      | # custom persona not installed from packages
+|\__templates/
+|   |__personas/
+|   |  | # custom persona not installed from packages
+|   |
+|   |__core/partials/_human.txt # if for some reason you want to tweak/edit the human template partial that ships with your given backend, you can just like a django override
+|
 |
 |\__tools/
 |   |_tool_1.py
@@ -32,17 +35,18 @@ And the Sid `settings.py` should look something like Djangos, like this:
 class Settings(EnvSettings):
 
     # Memory
-    state_backend: RedisBackend("redis0:6380,redis1:6380,allowAdmin=true")
-    archive_backend: MongoBackend("mongodb://localhost:27017/archive")
-    recall_backend: RedisBackend("redis0:6380,redis1:6380,allowAdmin=true")
+    # factory methods return a callable that takes the instance_id and memory type
+    state_backend: RedisBackend.factory("redis0:6380,redis1:6380,allowAdmin=true")
+    archive_backend: MongoBackend.factory("mongodb://localhost:27017/archive")
+    recall_backend: RedisBackend.factory("redis0:6380,redis1:6380,allowAdmin=true")
 
     # LLMs
-    generative_backends: {
-        "general_purpose": TogetherAIBackend(model="Falcon-40b", api_key=self.together_ai_api_key),
-        "coder": TogetherAIBackend(model="wizard-140b", api_key=self.together_ai_api_key),
-        "expert_in_fly_fishing": VertexBackend(model="custom-trained-flyfishing-model-10", b64_credentials=self.gcp_creds_as_b64)
+    inference_backends: {
+        "general_purpose": MixtralTogetherAIBackend(model="Falcon-40b", api_key=self.together_ai_api_key),
+        "coder": LLamaCoderTogetherAIBackend(model="wizard-140b", api_key=self.together_ai_api_key),
+        "expert_in_fly_fishing": LLama2VertexBackend(model="custom-trained-flyfishing-model-10", b64_credentials=self.gcp_creds_as_b64)
     }
-    default_generative_backend: "general_purpose"
+    default_inference_backend: "general_purpose"
 ```
 
 Then you will build Sid Egos like this:
@@ -78,4 +82,7 @@ def message_sid(
     ego: Depends[get_sid_ego]
 ):
     ego.message_from_user(user=user, message=message) # Sid sends messages to the user all by himself with the `message_user` tool we gave him earlier!
+
+Under the hood, each agent has a `stimuli` queue where all new information - messages from users, responses from tools, and warnings from the  sid OS about memory size - are enqued.
+
 ```

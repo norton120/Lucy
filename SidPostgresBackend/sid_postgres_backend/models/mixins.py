@@ -35,7 +35,7 @@ def _relation_setter(instance: "SqlalchemyBase", prop: str, prefix: str, value: 
         raise MalformedIdError("Hash segment of {value} is not a valid UUID") from e
 
 
-class SidAgentInstanceMixin(DBBase):
+class AgentInstanceMixin(DBBase):
     """Mixin for models that belong to an agent instance."""
 
     __abstract__ = True
