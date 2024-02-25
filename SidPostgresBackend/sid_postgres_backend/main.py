@@ -2,9 +2,6 @@ from typing import Any, Union, TYPE_CHECKING, Optional
 import logging
 from sqlalchemy import create_engine
 
-
-from sid_scoped_memory_base import SidScopedMemoryBase
-
 from sid_postgres_backend.models.base import SqlalchemyBase
 from sid_postgres_backend.exceptions import InstanceNotFound
 from sid_postgres_backend.models.database import SidAgentInstance
@@ -17,6 +14,8 @@ logger = logging.getLogger("sid.postgres_backend")
 
 class SidPostgresBackend:
     """adapts sid to use a postgres db
+    Init requires an existing agent instance; if one does not exist
+    must use the instance bootstrap to create one.
     """
     instance_id: str
 
@@ -38,7 +37,6 @@ class SidPostgresBackend:
             except InstanceNotFound as e:
                 logger.error("Unable to find an existing agent instance with id %s", self.instance_id)
                 raise e
-
 
     def session(self):
         yield self.engine.connect()
