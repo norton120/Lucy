@@ -7,10 +7,10 @@ from openai import OpenAI as Together
 
 from sid_mixtral_together_ai_backend.enums import LLMModel
 
-class SidTogetherAIBackend(SidInferenceBackendBase):
+class SidMixtralTogetherAIBackend(SidInferenceBackendBase):
     """LLM adapter for Mixtral 8x7b Together AI"""
     package_name = "sid_mixtral_together_ai_backend"
-    model = LLMModel.mixtral_8x7b_instruct
+    model = LLMModel.codellama_34b_instruct# LLMModel.mixtral_8x7b_instruct
     client: "Together"
     core_memory_maximum_number_of_messages_in_history = 10
     core_memory_maximum_total_chars = 10000
@@ -19,7 +19,6 @@ class SidTogetherAIBackend(SidInferenceBackendBase):
     core_memory_maximum_tool_count = 10
 
     def __init__(self,
-                 model: LLMModel,
                  api_key: str):
         """initiates the adapter with a model.
         Explicitly create with api_key to avoid side effects and opaque behavior.
@@ -27,7 +26,6 @@ class SidTogetherAIBackend(SidInferenceBackendBase):
         self.client = Together(
             base_url = "https://api.together.xyz/v1",
             api_key = api_key,
-            model = model.value
             )
 
     def generate(self, turn:Turn) -> Turn:
@@ -35,16 +33,15 @@ class SidTogetherAIBackend(SidInferenceBackendBase):
         """
         generation = self.client.chat.completions.create(
             model=self.model,
-            messages=turn.request_messages.model_dump(exclude_none=True),
-            tools=turn.request_tools.model_dump(exclude_none=True),
+            messages=[m.model_dump(exclude_none=True) for m in turn.request_messages],
+            tools=[t.model_dump(exclude_none=True) for t in turn.request_tools],
             tool_choice="auto",
         )
         # TODO: telementry
-
         response_message = Message(
             role=Role.assistant,
-            content=generation.choices[0].message,
-            tool_calls=generation.choices[0].tools,
+            content=generation.choices[0].message.content,
+            tool_calls=generation.choices[0].message.tool_calls,
         )
         turn.response_message = response_message
         return turn

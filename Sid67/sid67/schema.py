@@ -43,7 +43,7 @@ class Message(SidSchema):
     tool_calls: Optional[list[ToolCall]] = Field(description="a list of tool calls requested to be executed", default = None)
     tool_call_id: Optional[str] = Field(description="the id of the tool call that was executed", default = None)
 
-    @model_validator(model="before")
+    @model_validator(mode="before")
     @classmethod
     def valid_tool_message(cls, values):
         if values["role"] == "tool":
@@ -73,9 +73,9 @@ class Turn(SidSchema):
     Things can and will happen inbetween turns; for example, the output of a turn can be a function call. The execution of that call and the resulting output will not be captured in the turn
     (but will be added to the input at the beginning of the next turn).
     """
-    request_messages = list[Message]
-    request_tools = list[Tool]
-    response_message = Optional[Message] = None
+    request_messages: list[Message]
+    request_tools: list[Tool]
+    response_message: Optional[Message] = None
 
 ### KNOWLEDGE ###
 
