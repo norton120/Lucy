@@ -1,6 +1,6 @@
 ## Lucy
 
-![Lucy](https://i.gifer.com/5TWJ.gif)
+![Lucy](https://good_morning.gif)
 
 _Applied design of the  MemGPT memory management strategy_
 
