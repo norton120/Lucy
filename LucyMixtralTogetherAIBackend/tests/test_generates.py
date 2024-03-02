@@ -1,11 +1,11 @@
 import os
-from sid67.schema import Turn, Message, Role, Tool
+from lucy.schema import Turn, Message, Role, Tool
 
-from sid_mixtral_together_ai_backend.main import SidMixtralTogetherAIBackend
+from lucy_mixtral_together_ai_backend.main import LucyMixtralTogetherAIBackend
 
 class TestGenerates:
 
-    mta = SidMixtralTogetherAIBackend(
+    mta = LucyMixtralTogetherAIBackend(
         api_key=os.environ["TOGETHER_API_KEY"]
     )
     system = Message(
