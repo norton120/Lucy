@@ -1,0 +1,10 @@
+{% block ROM required %} {% endblock ROM %}
+
+
+
+<PERSONA {% if persona_chrs %}{{ persona_chars }}/{{ persona_chars_limit }} chars{% endif %}>
+{% block persona required %} {% endblock persona %}
+
+
+<HUMAN {% if human_chrs %}{{ human_chars }}/{{ human_chars_limit }} chars{% endif %}>
+{% block human required %} {% endblock human %}
