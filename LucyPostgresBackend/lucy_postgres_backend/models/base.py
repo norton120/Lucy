@@ -10,9 +10,9 @@ from sqlalchemy.orm import (
     declarative_mixin,
 )
 
-logger = logging.getLogger("sid.postgres")
+logger = logging.getLogger("lucy.postgres")
 
-from sid_postgres_backend.exceptions import InstanceNotFound
+from lucy_postgres_backend.exceptions import InstanceNotFound
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
@@ -91,7 +91,7 @@ class SqlalchemyBase(DBBase):
         Returns: The object.
         Raises: InstanceNotFound if the object is not found.
         Example:
-            user = SidAgentInstance.read("s_1234", db_session)
+            user = LucyAgentInstance.read("s_1234", db_session)
         """
         logger.info("reading %s %s", str(cls), _id)
         prefix, id_ = _id.split("_")

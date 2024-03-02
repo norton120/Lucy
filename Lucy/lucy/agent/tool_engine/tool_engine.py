@@ -1,5 +1,5 @@
 from typing import List
-from sid67.schema import ToolCall, Message, Tool
+from lucy.schema import ToolCall, Message, Tool
 
 
 class ToolEngine:
@@ -32,5 +32,5 @@ class ToolEngine:
 
     @property
     def os_tools(self) -> List[Tool]:
-        """get only the tools that are used by the Sid 'Operating System' - including all those offered by the inference and different memory backends"""
+        """get only the tools that are used by the Lucy 'Operating System' - including all those offered by the inference and different memory backends"""
         raise NotImplementedError

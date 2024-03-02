@@ -3,7 +3,7 @@ from uuid import UUID
 from sqlalchemy import UUID as SQLUUID, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-from sid_postgres_backend.models.base import DBBase
+from lucy_postgres_backend.models.base import DBBase
 
 class MalformedIdError(Exception):
     pass
@@ -41,13 +41,13 @@ class AgentInstanceMixin(DBBase):
     __abstract__ = True
 
     _agent_instance_id: Mapped[UUID] = mapped_column(
-        SQLUUID(), ForeignKey("sid_agent_instance._id")
+        SQLUUID(), ForeignKey("lucy_agent_instance._id")
     )
 
     @property
     def agent_instance_id(self) -> str:
-        return _relation_getter(self, "sid_agent_instance", "s")
+        return _relation_getter(self, "lucy_agent_instance", "s")
 
     @agent_instance_id.setter
     def agent_instance_id(self, value: str) -> None:
-        return _relation_setter(self, "sid_agent_instance", "s", value)
+        return _relation_setter(self, "lucy_agent_instance", "s", value)

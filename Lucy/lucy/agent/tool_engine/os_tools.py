@@ -3,7 +3,7 @@ from typing import Literal
 """Tools must always be functions in global scope within the targeted module. They must be documented using Google-style docstrings.
 
 
-These are Operating System tools used by Sid agents to adjust their own memory and other internal settings.
+These are Operating System tools used by Lucy agents to adjust their own memory and other internal settings.
 """
 
 

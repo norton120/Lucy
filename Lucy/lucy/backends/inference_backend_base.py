@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
-from sid67.schema import Turn
+from lucy.schema import Turn
 
-class SidInferenceBackendBase(ABC):
+class LucyInferenceBackendBase(ABC):
     """All Inference backends must implement this interface.
 
     Inference backends are the coupled assembly of a model, the prompt templates for that model, and the the LLM server where the model runtime exists.

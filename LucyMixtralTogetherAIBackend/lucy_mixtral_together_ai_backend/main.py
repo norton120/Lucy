@@ -1,13 +1,13 @@
-from sid67.backends.inference_backend_base import SidInferenceBackendBase
-from sid67.schema import Turn, Message, Role
+from lucy.backends.inference_backend_base import LucyInferenceBackendBase
+from lucy.schema import Turn, Message, Role
 # together uses a patched version of openai's client now
 from .enums import LLMModel
 from openai import OpenAI as Together
 
 
-from sid_mixtral_together_ai_backend.enums import LLMModel
+from lucy_mixtral_together_ai_backend.enums import LLMModel
 
-class SidMixtralTogetherAIBackend(SidInferenceBackendBase):
+class LucyTogetherAIBackend(LucyInferenceBackendBase):
     """LLM adapter for Mixtral 8x7b Together AI"""
     package_name = "sid_mixtral_together_ai_backend"
     model = LLMModel.codellama_34b_instruct# LLMModel.mixtral_8x7b_instruct
@@ -21,7 +21,7 @@ class SidMixtralTogetherAIBackend(SidInferenceBackendBase):
     def __init__(self,
                  api_key: str):
         """initiates the adapter with a model.
-        Explicitly create with api_key to avoid side effects and opaque behavior.
+        Explicitly create with api_key to avoid lucye effects and opaque behavior.
         """
         self.client = Together(
             base_url = "https://api.together.xyz/v1",

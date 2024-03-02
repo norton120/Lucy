@@ -1,4 +1,4 @@
-from sid import Sid
+from lucy import Lucy
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -10,6 +10,6 @@ def index():
 @app.post('/chat')
 def chat(message:str):
     """basic chat endpoint"""
-    sid = Sid()
+    lucy = Lucy()
 
-    return sid.turn(message)
+    return lucy.turn(message)

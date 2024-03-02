@@ -2,7 +2,7 @@ import jinja2
 
 
 class PromptEngine:
-    """an abstraction for the jinja2 templating engine with some Sid specific functionality."""
+    """an abstraction for the jinja2 templating engine with some Lucy specific functionality."""
 
     def __init__(self, package:str, templates_directory: str):
         self.env = jinja2.Environment(

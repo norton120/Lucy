@@ -1,11 +1,11 @@
-### Sid Project Architecture (NOT Library Arch)
+### Lucy Project Architecture (NOT Library Arch)
 
-! Warning ! Do not confuse the way the library is structured with the way a Sid project is structured. Very different things.
+! Warning ! Do not confuse the way the library is structured with the way a Lucy project is structured. Very different things.
 
-When Sid is installed in a project, it should look something like this:
+When Lucy is installed in a project, it should look something like this:
 
 ```
-sid_project/
+lucy_project/
 |
 |\settings.py
 |
@@ -28,7 +28,7 @@ sid_project/
     | # bespoke modules
 ```
 
-And the Sid `settings.py` should look something like Djangos, like this:
+And the Lucy `settings.py` should look something like Djangos, like this:
 
 ```python3
 
@@ -49,15 +49,15 @@ class Settings(EnvSettings):
     default_inference_backend: "general_purpose"
 ```
 
-Then you will build Sid Egos like this:
+Then you will build Lucy Egos like this:
 
 ```python3
 
-from sid.agent.stock_agents import Helper, ProjectManager
-from sid_elixir_phoenix import ElixirPhoenixCoder # plugin package for an elixir/phoenix developer agent
-from sid_sportsman.fishing import FlyFisher # plugin package for an agent that loves to fly fish
+from lucy.agent.stock_agents import Helper, ProjectManager
+from lucy_elixir_phoenix import ElixirPhoenixCoder # plugin package for an elixir/phoenix developer agent
+from lucy_sportsman.fishing import FlyFisher # plugin package for an agent that loves to fly fish
 
-ego = Sid(
+ego = Lucy(
     agents = [
         Helper(),
         Helper(), # extra grunt worker
@@ -68,21 +68,21 @@ ego = Sid(
     per_user = True, # each human has a 1:1 relationship with an ego
 )
 
-ego.attach_tool("sid_project.tools.tool1.message_user") # add the ability for sid to send messages back to the user!
-ego.attach_tool("https://github.com/cool_sid_tools/weather.git") # tool that enables Sid to get weather data
-ego.attach_tool("sid_coffee_pot.coffee_pot") # tool package on pypi that allows you to toggle off and on some random guy's coffee pot at UCLA
+ego.attach_tool("lucy_project.tools.tool1.message_user") # add the ability for lucy to send messages back to the user!
+ego.attach_tool("https://github.com/cool_lucy_tools/weather.git") # tool that enables Lucy to get weather data
+ego.attach_tool("lucy_coffee_pot.coffee_pot") # tool package on pypi that allows you to toggle off and on some random guy's coffee pot at UCLA
 
 ego.start() # ego runs perpetually as a daemon task
 
-# but how to do users talk to our ego, and our ego talk to users? that's why Sid is a library and not a project! that part is up to the project author.
+# but how to do users talk to our ego, and our ego talk to users? that's why Lucy is a library and not a project! that part is up to the project author.
 # for example, maybe this is a fastapi implementation
 @app.post("/")
-def message_sid(
+def message_lucy(
     user: Depends[get_current_user],
-    ego: Depends[get_sid_ego]
+    ego: Depends[get_lucy_ego]
 ):
-    ego.message_from_user(user=user, message=message) # Sid sends messages to the user all by himself with the `message_user` tool we gave him earlier!
+    ego.message_from_user(user=user, message=message) # Lucy sends messages to the user all by himself with the `message_user` tool we gave him earlier!
 
-Under the hood, each agent has a `stimuli` queue where all new information - messages from users, responses from tools, and warnings from the  sid OS about memory size - are enqued.
+Under the hood, each agent has a `stimuli` queue where all new information - messages from users, responses from tools, and warnings from the  lucy OS about memory size - are enqued.
 
 ```

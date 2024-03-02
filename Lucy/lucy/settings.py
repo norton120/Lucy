@@ -1,9 +1,9 @@
 from typing import Any
 from pydantic_settings import BaseSettings
 
-from sid_postgres_backend import SidPostgresBackend
+from lucy_postgres_backend import LucyPostgresBackend
 
-memory_backend = SidPostgresBackend("postgresql://sid:sid@localhost/sid")
+memory_backend = LucyPostgresBackend("postgresql://lucy:lucy@localhost/lucy")
 
 class Settings(BaseSettings):
     core_backend: Any = memory_backend

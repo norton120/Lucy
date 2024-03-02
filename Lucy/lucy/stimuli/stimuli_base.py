@@ -1,9 +1,9 @@
 from typing import Optional
 from abc import ABC, abstractmethod
 
-from sid67.schema import Message
+from lucy.schema import Message
 
-class SidStimuliBase(ABC):
+class LucyStimuliBase(ABC):
     """All Stimuli must implement this interface.
     """
 

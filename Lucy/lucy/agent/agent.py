@@ -2,19 +2,19 @@ from typing import Optional, TYPE_CHECKING
 from datetime import datetime
 import logging
 
-from sid67.settings import settings
-from sid67.schema import SidMemoryCore, Role
-from sid67.agent.prompt_engine import PromptEngine
-from sid67.agent.tool_engine import ToolEngine
+from lucy.settings import settings
+from lucy.schema import LucyMemoryCore, Role
+from lucy.agent.prompt_engine import PromptEngine
+from lucy.agent.tool_engine import ToolEngine
 
 if TYPE_CHECKING:
-    from sid67.backends.inference_backend_base import SidInferenceBackendBase
-    from sid67.backends.memory_backend_base import SidMemoryBackendBase
-    from sid67.stimuli.stimuli_base import SidStimuliBase
-    from sid67.schema import Message
+    from lucy.backends.inference_backend_base import LucyInferenceBackendBase
+    from lucy.backends.memory_backend_base import LucyMemoryBackendBase
+    from lucy.stimuli.stimuli_base import LucyStimuliBase
+    from lucy.schema import Message
 
 # TODO: real library logging https://docs.python.org/3/howto/logging-cookbook.html#adding-handlers-other-than-nullhandler-to-a-logger-in-a-library
-logger = logging.getLogger("sid.agent")
+logger = logging.getLogger("lucy.agent")
 
 class Agent:
     """The abstraction that uses different memory banks and an LLM to "think" and "act"
@@ -29,21 +29,21 @@ class Agent:
     """
     prompt_engine: "PromptEngine"
     tool_engine: "ToolEngine"
-    inference_backend: "SidInferenceBackendBase"
-    stimuli_queue: "SidStimuliBase"
-    core_memory: "SidMemoryCore"
-    persisted_core_memory: "SidMemoryBackendBase"
-    archival_memory: "SidMemoryBackendBase"
-    recall_memory: "SidMemoryBackendBase"
+    inference_backend: "LucyInferenceBackendBase"
+    stimuli_queue: "LucyStimuliBase"
+    core_memory: "LucyMemoryCore"
+    persisted_core_memory: "LucyMemoryBackendBase"
+    archival_memory: "LucyMemoryBackendBase"
+    recall_memory: "LucyMemoryBackendBase"
     heartbeat: float
 
     def __init__(self,
                  instance_id: Optional[str] = None,
-                 inference_backend: Optional["SidInferenceBackendBase"] = None,
-                 stimuli_queue: Optional["SidStimuliBase"] = None,
-                 core_memory_backend: Optional["SidMemoryBackendBase"] = None,
-                 archival_memory_backend: Optional["SidMemoryBackendBase"] = None,
-                 recall_memory_backend: Optional["SidMemoryBackendBase"] = None,
+                 inference_backend: Optional["LucyInferenceBackendBase"] = None,
+                 stimuli_queue: Optional["LucyStimuliBase"] = None,
+                 core_memory_backend: Optional["LucyMemoryBackendBase"] = None,
+                 archival_memory_backend: Optional["LucyMemoryBackendBase"] = None,
+                 recall_memory_backend: Optional["LucyMemoryBackendBase"] = None,
                  heartrate: Optional[int] = 60,
                  alternate_tools_path: Optional[str] = None,
                   ):
@@ -66,7 +66,7 @@ class Agent:
             setattr(self, backend[0], initialized)
 
 
-        self.core_memory = SidMemoryCore(
+        self.core_memory = LucyMemoryCore(
             boot=self.prompt_engine.render("boot"),
             human=self.prompt_engine.render("human"),
             persona=self.prompt_engine.render("persona")

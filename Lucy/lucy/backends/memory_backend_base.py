@@ -1,9 +1,9 @@
 from typing import List, Union, Callable
 from abc import ABC, abstractmethod
 
-from sid67.schema import MemoryType, SidMemoryCore, RecallSearchResult, ArchivalSearchResult, Message, Document
+from lucy.schema import MemoryType, LucyMemoryCore, RecallSearchResult, ArchivalSearchResult, Message, Document
 
-class SidMemoryBackendBase(ABC):
+class LucyMemoryBackendBase(ABC):
     """All memory backends must implement this interface.
 
     Args:
@@ -29,13 +29,13 @@ class SidMemoryBackendBase(ABC):
 
     @property
     @abstractmethod
-    def core(self) -> "SidMemoryCore":
+    def core(self) -> "LucyMemoryCore":
         """Returns the persisted (memory state) core IF this is a core memory backend."""
         raise NotImplementedError
 
     @core.setter
     @abstractmethod
-    def core(self, value: "SidMemoryCore"):
+    def core(self, value: "LucyMemoryCore"):
         """Sets the persisted (memory state) core IF this is a core memory backend."""
         raise NotImplementedError
 
@@ -43,7 +43,7 @@ class SidMemoryBackendBase(ABC):
     def factory(cls, *args, **kwargs) -> Callable:
         """Override this factory so that a global callable can be used to set up db connections, initialize documents etc.
 
-        NOTE: this must return a callable with the signature (instance_id: str, memory_type: MemoryType) -> SidMemoryBackendBase!
+        NOTE: this must return a callable with the signature (instance_id: str, memory_type: MemoryType) -> LucyMemoryBackendBase!
         """
         raise NotImplementedError
 
@@ -51,7 +51,7 @@ class SidMemoryBackendBase(ABC):
         """Writes a list of messages to the correct memory."""
         match self.memory_type:
             case MemoryType.core:
-                raise ValueError("Core memory must be written to directly as a SidCoreMemory object!")
+                raise ValueError("Core memory must be written to directly as a LucyCoreMemory object!")
             case MemoryType.recall:
                 self._write_to_recall(items)
             case MemoryType.archival:

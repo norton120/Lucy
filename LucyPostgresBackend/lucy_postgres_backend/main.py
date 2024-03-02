@@ -2,18 +2,18 @@ from typing import Any, Union, TYPE_CHECKING, Optional
 import logging
 from sqlalchemy import create_engine
 
-from sid_postgres_backend.models.base import SqlalchemyBase
-from sid_postgres_backend.exceptions import InstanceNotFound
-from sid_postgres_backend.models.database import SidAgentInstance
+from lucy_postgres_backend.models.base import SqlalchemyBase
+from lucy_postgres_backend.exceptions import InstanceNotFound
+from lucy_postgres_backend.models.database import LucyAgentInstance
 
 if TYPE_CHECKING:
     from sqlalchemy import URL
 
 
-logger = logging.getLogger("sid.postgres_backend")
+logger = logging.getLogger("lucy.postgres_backend")
 
-class SidPostgresBackend:
-    """adapts sid to use a postgres db
+class LucyPostgresBackend:
+    """adapts lucy to use a postgres db
     Init requires an existing agent instance; if one does not exist
     must use the instance bootstrap to create one.
     """
@@ -33,7 +33,7 @@ class SidPostgresBackend:
         with self.session() as session:
             # TODO need base settings for prompts
             try:
-                self.db_instance = SidAgentInstance.read(session, self.instance_id)
+                self.db_instance = LucyAgentInstance.read(session, self.instance_id)
             except InstanceNotFound as e:
                 logger.error("Unable to find an existing agent instance with id %s", self.instance_id)
                 raise e
@@ -42,11 +42,11 @@ class SidPostgresBackend:
         yield self.engine.connect()
 
     @property
-    def core_memory(self) -> "SidAgentInstance":
+    def core_memory(self) -> "LucyAgentInstance":
         # should assemble current state from instance
         # plus any archival and recall memory requested
         with self.backend.session() as session:
-           agent = SidAgentInstance.read_or_create(session, self.instance_id)
+           agent = LucyAgentInstance.read_or_create(session, self.instance_id)
 
         #TODO: this should be prompt assembly based on an agent prompt template
         return "\n".join([agent.system_message, agent.human, agent.persona])
