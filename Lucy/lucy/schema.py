@@ -95,11 +95,9 @@ class MemoryType(str, Enum):
 
 class LucyMemoryCore(LucySchema):
     """The core memory components of an agent."""
-    boot: str = Field(description="the system 'boot' message section of core memory, which introduces the LLM to the new agent instance")
-    bios: str = Field(description="the system 'bios' message section of core memory, which details how core memory is to be used to the LLM")
-    persona: str = Field(description="the persona section of core memory, describing the agent's personality")
-    human: str = Field(description="the human section of core memory, describing the user")
-    history: list[Message] = Field(description="the visible message history for the agent")
+    persona: str = Field(default="", description="the persona section of core memory, describing the agent's personality")
+    human: str = Field(default="",description="the human section of core memory, describing the user")
+    history: list[Message] = Field(description="the visible message history for the agent", default_factory=lambda: [])
 
     def fifo_history(self, message: Message, max_length: int = 100) -> List[Optional[Message]]:
         """Adds a message to the history, removing the oldest message if the history is at the maximum length."""

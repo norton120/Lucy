@@ -1,9 +1,11 @@
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, List
 from datetime import datetime
 import logging
 
+from threading import Thread
+
 from lucy.settings import settings
-from lucy.schema import LucyMemoryCore, Role
+from lucy.schema import LucyMemoryCore, Role, ToolCall
 from lucy.agent.prompt_engine import PromptEngine
 from lucy.agent.tool_engine import ToolEngine
 
@@ -35,7 +37,8 @@ class Agent:
     persisted_core_memory: "LucyMemoryBackendBase"
     archival_memory: "LucyMemoryBackendBase"
     recall_memory: "LucyMemoryBackendBase"
-    heartbeat: float
+    thinking_heartbeat: float
+    os_heartbeat: float
 
     def __init__(self,
                  instance_id: Optional[str] = None,
@@ -66,49 +69,77 @@ class Agent:
             setattr(self, backend[0], initialized)
 
 
-        self.core_memory = LucyMemoryCore(
-            boot=self.prompt_engine.render("boot"),
-            human=self.prompt_engine.render("human"),
-            persona=self.prompt_engine.render("persona")
-        )
+        self.core_memory = LucyMemoryCore()
 
         if instance_id:
             self.instance_id = instance_id
+            # load existing core state
             self.core_memory = self.persisted_core_memory.core
 
-        # start the daemon
-        self.daemon()
+        # start the daemons
+        #TODO: graceful start/stop control
+        #TODO: need observability inside here
+        if False:
+            Thread(target=self.thinking_daemon).start()
+            Thread(target=self.operating_system_daemon).start()
+        else:
+            # this is just for testing while I'm on the plane
+            self.combined_daemon()
 
 
-    def daemon(self):
+    def thinking_daemon(self):
         """the 'cognitive loop' of our agent. Continually processes existing 'thoughts', new stimuli, and generating responses."""
 
         while "Continue thinking":
+            if datetime.now().timestamp() >= self.thinking_heartbeat:
+                # for now, don't guard the daemon. Let's get to a point where the think loop is pretty well hardened and then worry about it
+                if new_thought := self.stimuli_queue.deque():
+                    self.adust_recall_memory(new_thought)
+                self.think()
+                self.thinking_heartbeat = datetime.now().timestamp() + self.heartrate
 
-            if datetime.now().timestamp() <= self.heartbeat:
-                continue
+    def operating_system_daemon(self):
+        """the 'operating system loop' of our agent. Continually processes internal messages, such as resizing memory."""
 
-            # for now, don't guard the daemon. Let's get to a point where the think loop is pretty well hardened and then worry about it
-            if new_thought := self.stimuli_queue.deque():
-                self.adust_recall_memory(new_thought)
-            self.think()
-            self.heartbeat = datetime.now().timestamp() + self.heartrate
+        while "Continue operating":
+            if datetime.now().timestamp() >= self.os_heartbeat:
+                self.os_cycle()
+                self.os_heartbeat = datetime.now().timestamp() + self.heartrate
 
+    def combined_daemon(self):
+
+        while "Continue thinking and operating":
+            if datetime.now().timestamp() >= self.thinking_heartbeat:
+                if new_thought := self.stimuli_queue.deque():
+                    self.adust_recall_memory(new_thought)
+                self.think()
+                self.thinking_heartbeat = datetime.now().timestamp() + self.heartrate
+
+            if datetime.now().timestamp() >= self.os_heartbeat:
+                self.os_cycle()
+                self.os_heartbeat = datetime.now().timestamp() + self.heartrate
 
     def think(self):
         """The process of incorporating stimuli into core memory, generating with that memory, and executing any tool calls in the response."""
-        response_message = self.inference_backend.generate(self.core_memory)
-
+        response_message = self.inference_backend.generate(core=self.prompt_engine.render_thought(self.core_memory),
+                                                           tools=self.tool_engine.thought_tools)
+        # add the generative response to the message history
         self.adust_recall_memory(response_message)
 
         # intentionally blocking
         if response_message.request_tools:
-            for tool_call in response_message.request_tools:
-                # some kind of tool handler that merges internal tools with a tools folder in the downstream project
-                tool_response:Message = self.tool_engine.execute(tool_call)
-                self.stimuli_queue.append(tool_response)
-            self.heartbeat = 0 # always force an immediate generation after tool calls
+            self.handle_tool_execution(response_message.request_tools)
+            self.thinking_heartbeat = 0 # always force an immediate generation after tool calls
 
+    def os_cycle(self):
+        """execute the system processes to keep the agent healthy"""
+        garbage_collection = self.inference_backend.generate(
+            core=self.prompt_engine.render_garbage_collection(self.core_memory),
+            tools=self.tool_engine.os_tools
+        )
+        if garbage_collection.request_tools:
+            self.handle_tool_execution(garbage_collection.request_tools)
+            # don't need to adjust the heartbeat, only informative
 
     def core_memory_check(self) -> None:
         """check the state of core memory, and if it needs to be resized, add a stimuli to do so."""
@@ -147,3 +178,9 @@ class Agent:
             role=Role.system,
             tools=self.tool_engine.os_tools
         )
+
+    def handle_tool_execution(self, request_tools:List[ToolCall]) -> None:
+        for tool_call in request_tools:
+            # some kind of tool handler that merges internal tools with a tools folder in the downstream project
+            tool_response:Message = self.tool_engine.execute(tool_call)
+            self.stimuli_queue.append(tool_response)
