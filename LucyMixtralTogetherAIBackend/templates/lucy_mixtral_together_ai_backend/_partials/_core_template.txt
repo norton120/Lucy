@@ -1,10 +1,10 @@
 {% block ROM required %} {% endblock ROM %}
 
 
-
+This is what I know about myself:
 <PERSONA {% if persona_chrs %}{{ persona_chars }}/{{ persona_chars_limit }} chars{% endif %}>
 {% block persona required %} {% endblock persona %}
 
-
+This is what I know about the user:
 <HUMAN {% if human_chrs %}{{ human_chars }}/{{ human_chars_limit }} chars{% endif %}>
 {% block human required %} {% endblock human %}
