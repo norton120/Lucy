@@ -3,8 +3,8 @@
 
 This is what I know about myself:
 <PERSONA {% if persona_chrs %}{{ persona_chars }}/{{ persona_chars_limit }} chars{% endif %}>
-{% block persona required %} {% endblock persona %}
+{% block persona required %}{% include '../_partials/_default_persona.txt' %}{% endblock persona %}
 
 This is what I know about the user:
 <HUMAN {% if human_chrs %}{{ human_chars }}/{{ human_chars_limit }} chars{% endif %}>
-{% block human required %} {% endblock human %}
+{% block human required %}{% include '../_partials/_default_persona.txt' %}{% endblock human %}
