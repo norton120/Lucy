@@ -1,0 +1,3 @@
+-r production.requirements.txt
+pytest
+pytest-it

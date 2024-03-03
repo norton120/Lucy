@@ -1,0 +1,11 @@
+{% block ROM required %} {% endblock ROM %}
+
+PERSONA{% if persona_chars is defined %} ({{ persona_chars }}/{{ persona_chars_limit }} chars){% endif %}:
+This is what I know about myself:
+
+{% block persona required -%}{%- endblock persona %}
+
+HUMAN{% if human_chars is defined %} ({{ human_chars }}/{{ human_chars_limit }} chars){% endif %}:
+This is what I know about the user:
+
+{% block human required -%}{%- endblock human %}
